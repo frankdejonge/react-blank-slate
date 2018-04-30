@@ -1,0 +1,6 @@
+yarn add \                                                                                                                                       [19:57:11]
+    react react-dom react-router react-router-dom  \
+    webpack webpack-cli \
+    babel-loader babel-core \
+    babel-preset-env babel-preset-react \
+    babel-plugin-transform-object-rest-spread
