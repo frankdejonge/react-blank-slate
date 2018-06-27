@@ -1,3 +1,17 @@
+<?php
+// Create a stream
+$opts = [
+    "http" => [
+        "method" => "GET",
+        "header" => "x-application-id: bf87f80a-296b-4286-937e-37eac0493234"
+    ]
+];
+
+$context = stream_context_create($opts);
+
+// Open the file using the HTTP headers set above
+$json = file_get_contents('http://todos.frankdejonge.nl:8000/todo', false, $context);
+?>
 <!doctype html>
 <html lang="en">
 <head>
@@ -10,6 +24,7 @@
 </head>
 <body style="padding: 0.25rem 1rem;">
     <div id="app"></div>
+    <script language="javascript">window.INITIAL_STATE = <?=$json?></script>
     <script language="javascript" src="/dist/start.js"></script>
 </body>
 </html>

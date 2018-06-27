@@ -1,15 +1,18 @@
 import React, { Component } from 'react';
 import { render } from 'react-dom';
-import { bindActionCreators, createStore, combineReducers, applyMiddleware } from 'redux';
+import { bindActionCreators, createStore, compose, combineReducers, applyMiddleware } from 'redux';
 import thunk from 'redux-thunk';
 import { connect, Provider } from 'react-redux';
 import TaskList from './todos/task-list';
 import * as reducers from './todos/reducers';
 import * as actions from './todos/actions';
 
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
+
 let store = createStore(
     combineReducers(reducers),
-    applyMiddleware(thunk)
+    {todos: window.INITIAL_STATE},
+    composeEnhancers(applyMiddleware(thunk))
 );
 
 class TodoDisplay extends Component {
@@ -33,16 +36,18 @@ class TodoDisplay extends Component {
         this.props.addTodo(task);
     }
     render() {
-        const { todos } = this.props;
+        const { todos, deleteTodo, markTodoCompleted, updateTaskDescription, markTodoNotCompleted, isSaving } = this.props;
 
         return <div>
-            <h1>There are {todos.length} task(s).</h1>
+            <h1>There are {todos.length} task(s). { isSaving && <span>SAVING!!!</span> }</h1>
             <TaskList
-                deleteTask={this.props.deleteTodo}
-                markCompleted={this.props.markTodoCompleted}
+                deleteTask={deleteTodo}
+                markCompleted={markTodoCompleted}
+                markNotCompleted={markTodoNotCompleted}
+                updateTaskDescription={updateTaskDescription}
                 tasks={todos} />
             <div>
-                <input type="text" onKeyDown={this.maybeAddTask} />
+                <input autoFocus={true} type="text" onKeyDown={this.maybeAddTask} />
             </div>
         </div>;
     }

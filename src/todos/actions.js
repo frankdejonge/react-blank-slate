@@ -1,21 +1,82 @@
 import uuid from '../uuid';
+import fetch from 'unfetch';
 
-export const ADD_TODO = 'ADD_TODO';
+const APPLICATION_ID = 'bf87f80a-296b-4286-937e-37eac0493234';
+
+export const ADDING_TODO = 'ADDING_TODO';
+export const ADDED_TODO = 'ADDED_TODO';
 
 export function addTodo(task) {
     const todo = {task, id: uuid(), completed: false};
 
-    return {type: ADD_TODO, todo};
+    return dispatch => {
+        dispatch({type: ADDING_TODO, todo});
+        return fetch('http://todos.frankdejonge.nl:8000/todo', {
+            method: 'POST',
+            headers: {
+                'x-application-id': APPLICATION_ID
+            },
+            body: JSON.stringify(todo)
+        })
+            .then(resp => resp.json())
+            .then(todo => dispatch({type: ADDED_TODO, todo}));
+    };
 }
 
-export const MARK_COMPLETED = 'MARK_COMPLETED';
+
+export const LOADED_TODOS = 'LOADED_TODOS';
+
+export function loadTodos() {
+    return dispatch => {
+        return fetch('http://todos.frankdejonge.nl:8000/todo', {
+            method: 'GET',
+            headers: {
+                'x-application-id': APPLICATION_ID
+            }
+        })
+            .then(resp => resp.json())
+            .then(todos => setTimeout(() => dispatch({type: LOADED_TODOS, todos}), 100));
+    };
+}
+
+export const TODO_UPDATED = 'TODO_UPDATED';
+
+function updateTodo(id, update) {
+    return dispatch => {
+        return fetch(`http://todos.frankdejonge.nl:8000/todo/${id}`, {
+            method: 'PUT',
+            headers: {
+                'x-application-id': APPLICATION_ID
+            },
+            body: JSON.stringify(update)
+        })
+            .then(resp => resp.json())
+            .then(todo => dispatch({ type: TODO_UPDATED, todo }));
+    }
+}
 
 export function markTodoCompleted(id) {
-    return {type: MARK_COMPLETED, id};
+    return updateTodo(id, {completed: true});
+}
+
+export function markTodoNotCompleted(id) {
+    return updateTodo(id, {completed: false});
+}
+
+export function updateTaskDescription(id, task) {
+    return updateTodo(id, {task});
 }
 
 export const DELETE_TODO = 'DELETE_TODO';
 
 export function deleteTodo(id) {
-    return {type: DELETE_TODO, id};
+    return dispatch => {
+        return fetch(`http://todos.frankdejonge.nl:8000/todo/${id}`, {
+            method: 'DELETE',
+            headers: {
+                'x-application-id': APPLICATION_ID
+            }
+        })
+            .then(() => dispatch({ type: DELETE_TODO, id }));
+    };
 }

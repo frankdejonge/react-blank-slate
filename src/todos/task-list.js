@@ -8,6 +8,12 @@ export default class TaskList extends Component {
     markCompleted(id) {
         return () =>  this.props.markCompleted(id);
     }
+    markNotCompleted(id) {
+        return () =>  this.props.markNotCompleted(id);
+    }
+    updateTaskDescription(id) {
+        return (task) =>  this.props.updateTaskDescription(id, task);
+    }
     render() {
         const { tasks } = this.props;
 
@@ -16,7 +22,13 @@ export default class TaskList extends Component {
         }
 
         return <ul>
-            {tasks.map(task => <Task onMarkCompleted={this.markCompleted(task.id)} onDelete={this.deleteTask(task.id)} key={task.id} task={task} />)}
+            {tasks.map(task => <Task
+                onMarkCompleted={this.markCompleted(task.id)}
+                onMarkNotCompleted={this.markNotCompleted(task.id)}
+                updateTaskDescription={this.updateTaskDescription(task.id)}
+                onDelete={this.deleteTask(task.id)}
+                key={task.id}
+                task={task} />)}
         </ul>;
     }
 }
