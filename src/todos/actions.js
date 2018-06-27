@@ -23,22 +23,6 @@ export function addTodo(task) {
     };
 }
 
-
-export const LOADED_TODOS = 'LOADED_TODOS';
-
-export function loadTodos() {
-    return dispatch => {
-        return fetch('http://todos.frankdejonge.nl:8000/todo', {
-            method: 'GET',
-            headers: {
-                'x-application-id': APPLICATION_ID
-            }
-        })
-            .then(resp => resp.json())
-            .then(todos => setTimeout(() => dispatch({type: LOADED_TODOS, todos}), 100));
-    };
-}
-
 export const TODO_UPDATED = 'TODO_UPDATED';
 
 function updateTodo(id, update) {

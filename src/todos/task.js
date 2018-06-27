@@ -22,7 +22,7 @@ class Task extends Component {
             return <div>
                 <input autoFocus={true} type="text" defaultValue={task} onKeyDown={this.maybeUpdateTask}/>
                 <button onClick={this.stopEditing}>cancel</button>
-            </div>
+            </div>;
         }
 
         return <li>

@@ -7,7 +7,7 @@ import TaskList from './todos/task-list';
 import * as reducers from './todos/reducers';
 import * as actions from './todos/actions';
 
-const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 let store = createStore(
     combineReducers(reducers),
